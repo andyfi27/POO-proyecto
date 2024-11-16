@@ -43,7 +43,7 @@ Inventario::Inventario(){ //Constructor
       this-›existencias = 0;
 } 
 void Inventario::leeRegistro(){
-     cout «< "\n Alta de producto\n";
+     cout << "\n Alta de producto\n";
      cout << "\n identificador de producto: ";
      cin >> this->idProduc;
      cout << "\nNombre: ";
@@ -108,7 +108,7 @@ void Inventario::consultaProduc(){
      FILE *archi;
      archi = fopen(nominventario, "r");
      if(archi == NULL){
-         cout «< "\nERROR en la apertura del archivo";
+         cout << "\nERROR en la apertura del archivo";
          stop();
          return；}  
 
@@ -123,9 +123,9 @@ void Inventario::consultaProduc(){
      if(idBuscado == this->idProduc){
          ban=1;
 cout << "ID Producto: " << this->idProduc << endl;
-cout << "Nombre Producto:" << this->nomProduc «< endl;
-cout « "Precio Venta: " «< this-›precioVenta «< endl;
-cout << "Precio Compra:" «< this-›precioCompra «< endl;
+cout << "Nombre Producto:" << this->nomProduc << endl;
+cout <<"Precio Venta: " << this-›precioVenta << endl;
+cout << "Precio Compra:" << this-›precioCompra << endl;
 cout << "Existencias："<<this->existencias << endl；
 cout <<"-----------------"<<endl；
 break；
@@ -167,5 +167,170 @@ while(!feof(archi)){
                ban=1;
 cout << "ID Producto: " << this->idProduc<< endl;
 cout << "Nombre Producto:" << this->nomProduc «< endl; 
-cout << "Precio Venta:" «< this-›precioVenta << endl;
+cout << "Precio Venta:" << this-›precioVenta << endl;
+cout << "Precio Compra:" << this-›precioCompra << endl;
+cout << "Existencias:" << this-›existencias << endl;
+cout <<"-----------------"<<endl;
+cout <<"\n El registro fue eliminado";
+       }
+         else{
+        fscanf(archi, "%d", &this->idProduc); //leer del archivo apuntado por archi
+        fscanf(archi, "%s", &this->nomProduc); // NO DEBE FALTAR EL &&&&&&&
+        fscanf(archi, "%f", &this->precioVenta);
+        fscanf(archi, "%f", &this->precioCompra);
+        fscanf(archi, "%d", &this-›existencias);
+     }
+}
+   if(!ban)
+cout << "No se encontró ningún producto con ID:" << idBorrar << endl;
+
+      fclose (archi);
+      fclose(aux);
+      remove(nominventario);
+      rename("borrame.txt",nomInventario);
+      stop();
+}
+void Inventario::modificaProduc(){
+      int idModifica, opc;
+      cout<<"Ingrese el id del producto que desea modificar: "<<endl;
+      cin>>idModifica;
+      bool ban=0;
+      FILE *archi;
+      FILE *aux;
+      archi = fopen(nomInventario, "r");
+      if(archi == NULL){
+           cout << "\nERROR en la apertura del archivo mac inventario";
+           stop();
+           return;
+}
+aux = fopen ("borrame.txt", "w");
+if(aux == NULL){
+     cout << "\nERROR en la apertura del archivo borrame";
+     stop();
+     return;
+}
+cout<< "Producto que coincide con el id a modificar: "<<endl;
+while(!feof(archi)){
+        fscanf(archi, "%d", &this->idProduc); //leer del archivo apuntado por archi
+        fscanf(archi, "%s", &this->nomProduc); // NO DEBE FALTAR EL &&&&&&&
+        fscanf(archi, "%f", &this->precioVenta);
+        fscanf(archi, "%f", &this->precioCompra);
+        fscanf(archi, "%d", &this-›existencias);
+
+if(idModifica == this->idProduc){
+        ban=1;
+     do{
+       cout<<"1)ID Producto： "<< thissidProduc << endl;
+       cout<<"2） Nombre Producto： "<<this->nomProduc << endl;
+       cout<<"3) Precio Venta: " << this->precioVenta << endl; 
+       cout << "4) Precio Compra: " <<this-›precioCompra <<endl;
+       cout << "5) Existencias: " << this-›existencias <<endl; 
+       cout << "6) Salir de modificar\n----------"<<endl；
+       cout<<"\n ¿Cual elemento quieres modificar?: ";
+               cin>>opc;
+               switch(opc){
+           case 1:
+               cout<<"\n No se puede modificar el id";
+               stop();
+               break;
+           case 2:
+               cout<<"\n Dar nuevo nombre: ";
+               fflush(stdin);
+               gets(this->nomProduc);
+               break;
+          case 3:
+               cout<<"\n Dar el nuevo precio de venta: $";
+               cin>>this->precioVenta;
+               break;
+          case 4:
+               cout<<"\n Dar el nuevo precio de compra: $"; 
+               cin>>this-›precioCompra;
+               break;
+          case 5:
+               cout<<"\n Dar el nuevo numero de existencias: "; 
+               cin>>this-›existencias;
+               break;
+          case 6:
+               break;
+          default:
+               cout<<"\n Opcion incorrecta";
+              stop();
+           }             
+       }while(opc != 6
+}
+
+        fprintf(aux, "%d", &this->idProduc); //leer del archivo apuntado por archi
+        fprintf(aux, "%s", &this->nomProduc); // NO DEBE FALTAR EL &&&&&&&
+        fprintf(aux, "%f", &this->precioVenta);
+        fprintf(aux, "%f", &this->precioCompra);
+        fprintf(auxi, "%d", &this-›existencias);
+
+if (!ban)
+cout << "No se encontró ningún producto con ID:" << idModifica << endl;
+      fclose(archi);
+      fclose(aux);
+      remove(nominventario);
+      rename("borrame.txt",nominventario);
+      stop();
+}
+void menu(){
+     cout << "\n[1] Dar de alta un producto"; 
+     cout << "\n[2] Dar de baja un producto";
+     cout << "\n[3] Modifica un producto";
+     cout << "\n[4] Consultar un producto"; 
+     cout << "\n[5] Mostrar inventario"; c
+     cout << "\n[6] Imprime registro";
+     cout << "\n[7] Salir";
+}
+void stop(){
+     cout << "\nPULSA TECLA PARA CONTINUAR ... ";
+}
+int main(){
+     char resp;
+     time_t tiempo_inicial, tiempo_final;
+     tiempo_inicial = time(NULL);
+     //Crear objeto
+     Inventario P1;
+     printf("\nDar el nombre del inventario: \n");
+     gets(nominventario);
+     int opc;
+     do{
+           menu();
+           cout << "InElija opcion [1,2,3,4,5,6,7]: ";
+           cin >> орс;
+           switch(opc){
+               case alta:
+                  P1.leeRegistro();
+                  P1.altaProduc();
+                  break;
+               case bajas:
+
+                  P1.bajaProduc();
+                  break;
+               case cambio:
+                  P1.modificaProduc();
+                break;
+               case consulta:
+                  P1.consultaProduc();
+                  break;
+               case muestra:
+                  P1.mostrarInventario(;
+                  break;
+               case imprimeReg:
+                  P1.imprimeRegistro();
+                  getch();
+                  break;
+               case salir:
+                  break;
+               default:
+                  cout << "\nOpcion INVALIDA";
+         }     
+}while(opc != salir);
+printf("\n Fin de la Ejecucion");
+tiempo_final= 
+time(NULL);
+printf("\n\n Hora de entrada %s", asctime(localtime(&tiempo_inicial)));
+printf("\n Hora de salida: %s", asctime(localtime(&tiempo_final)));
+printf("\n El tiempo de permanencia es : %4.2f segundos", difftime(tiempo_final, tiempo_inicial));
+}
 

@@ -54,5 +54,118 @@ void Inventario::leeRegistro(){
      cout << "InPrecio de compra: $";
      cin >> this-›precioCompra;
      cout << "\nNumero de existencias:";
-     cin > this->existencias; }
+     cin > this->existencias; 
+}
+void Inventario::imprimeRegistro(){
+     cout << "Inidentificador producto: " << this->idProduc;
+     cout << "\nNombre:" << this->nomProduc;
+     cout ＜< "\n Precio venta $"<< this->precioVenta；
+     cout << "\nPrecio proveedor: $" << this-›precioCompra;
+     cout << "\n Cantidad en existencias; " << this->existencias; }
+
+void Inventario: altaProduc(){
+   FILE *archiv; //Crear puntero que punte a archivo
+//Se abre el archivo
+   archiv = fopen(nominventario, "a"); //Se coloca ruta txt para poderlo ver
+//en modo append para agregar
+if (archiv == NULL){
+     cout << "\nERROR en la apertura del archivo.";
+     stop();
+     return; //Salir }
+fprintf(archiv, "\n%d", this->idProduc);
+fprintf(archiv, "\n%s", this->nomProduc);
+fprintf(archiv, "\n%f", this-precioVenta);
+tprintf(archiv, "\n%f", this-precioCompra);
+fprintf(archiv, "\n%d", this-›existencias);
+fclose(archiv);
+cout << "\nEl registro ha sido almacenado con exito";
+stop();
+｝
+void Inventario::mostrarinventario(){
+      FILE *archi;
+      archi = fopen(nomInventario, "r");
+      if(archi == NULL){
+      cout <<" \nERROR en la apertura del archivo";
+      stop();
+      return;
+   }
+   while(!feof(archi)){
+      fscanf(archi, "\n%d", &this->idProduc); //leer del archivo apuntado por archi
+      fscanf(archi, "\n%s", &this-> nomProduc); // NO DEBE FALTAR EL &&&&&&& 
+      fscanf(archi, "\n%f", &this->precioVenta);
+      fscanf(archi, "\n%f", &this-›precioCompra);
+      fscanf(archi, "\n%d", &this->existencias);
+      imprimeRegistro; //Esta adentro de la clase
+   }
+   fclose (archi); 
+   stop();
+}
+void Inventario::consultaProduc(){
+     int idBuscado;
+     cout<<"Ingrese el id del producto que busca: "<<endl;
+     cin>>idBuscado;
+     bool ban=0;
+     FILE *archi;
+     archi = fopen(nominventario, "r");
+     if(archi == NULL){
+         cout «< "\nERROR en la apertura del archivo";
+         stop();
+         return；}  
+
+ cout<<"Producto que coincide con el id buscado: "<<endl;
+ while(!feof(archi)){
+     fscanf(archi, "%d", &this->idProduc); //leer del archivo apuntado por archi
+     fscanf(archi, "%s", &this-> nomProduc); // NO DEBE FALTAR EL &&&&&&&
+     fscanf(archi, "%f", &this-›precioVenta);
+     fscanf(archi, "%f",&this-›precioCompra);
+     fscanf(archi, "%d", &this->existencias);
+
+     if(idBuscado == this->idProduc){
+         ban=1;
+cout << "ID Producto: " << this->idProduc << endl;
+cout << "Nombre Producto:" << this->nomProduc «< endl;
+cout « "Precio Venta: " «< this-›precioVenta «< endl;
+cout << "Precio Compra:" «< this-›precioCompra «< endl;
+cout << "Existencias："<<this->existencias << endl；
+cout <<"-----------------"<<endl；
+break；
+        }
+   }
+   if (!ban)
+cout << "No se encontró ningún producto con ID: " <<idBuscado << endl;
+    fclose(archi);
+    stop();
+}
+void Inventario::bajaProduc(){
+    int idBorrar;
+    cout<<"ingrese el id del producto que desea borrar: "<<endl;
+    cin>>idBorrar;
+    bool ban=0;
+    FILE *archi;
+    FILE *aux;
+    archi = fopen(nomInventario, "r");
+    if(archi == NULL){
+         cout << "\nERROR en la apertura del archivo mac inventario";
+         stop();
+         return;
+}
+aux=fopen("borrame.txt", "w");
+if(aux == NULL){
+         cout << "\nERROR en la apertura del archivo borrame";
+         stop();
+         return;
+}
+cout<<"Producto que coincide con el id a eliminar: "<<endl; 
+while(!feof(archi)){
+        fscanf(archi, "%d", &this->idProduc); //leer del archivo apuntado por archi
+        fscanf(archi, "%s", &this->nomProduc); // NO DEBE FALTAR EL &&&&&&&
+        fscanf(archi, "%f", &this->precioVenta);
+        fscanf(archi, "%f", &this->precioCompra);
+        fscanf(archi, "%d", &this-›existencias);
+
+        if(idBorrar == this->idProduc){
+               ban=1;
+cout << "ID Producto: " << this->idProduc<< endl;
+cout << "Nombre Producto:" << this->nomProduc «< endl; 
+cout << "Precio Venta:" «< this-›precioVenta << endl;
 

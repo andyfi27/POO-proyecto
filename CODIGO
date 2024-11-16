@@ -1,1 +1,44 @@
-#include 
+ #include <iostream>
+#include <conio.h>
+#include <stdio.h> //Para archivos
+#include <time.h>
+#include <string.h>
+#include <dos.h>
+using namespace std;
+void stop();
+char nominventario[200];
+enum casos(
+alta = 1,
+baja, cambio, consulta, muestra, imprimeReg, salir };
+class Inventariof
+private:
+int idProduc;
+char nom Produc[80];
+float precioVenta;
+float precioCompra;
+int existencias;
+public:
+Inventario();
+void altaProduc();
+void bajaProduc(;
+void modificaProduc(;
+void consultaProduc();
+void mostrarInventario();
+void imprimeRegistro();
+void lee Registro(;
+};
+Inventario: Inventario()//Constructor
+this->idProduc = 0;
+strepy (this->nomProduc, this-›precioVenta = 0.0;
+this-precioCompra = 0.0;
+this-›existencias = 0;
+void Inventario::leeRegistro(/
+cout «< "\nAlta de producto\n";
+cout << "nidentificador de producto: ";
+cin >> this->idProduc;
+cout << "\nNombre: ";
+fflush(stdin);
+gets (this->nomProduc);
+cout << "\nPrecio de venta: $"; cin >> this-›precioVenta;
+cout << "InPrecio de compra: $"; cin >> this-›precioCompra;
+cout << "\nNumero de existencias:"; cin > this->existencias; }

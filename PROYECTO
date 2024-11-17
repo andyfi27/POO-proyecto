@@ -1,1 +1,266 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <ctime>
+#include <iomanip>
+
+using namespace std;
+
+// Funciones de utilidades
+void pausa() {
+    cout << "\nPresiona una tecla para continuar... ";
+    cin.ignore();
+    cin.get();
+}
+
+// Clase Libro
+class Libro {
+private:
+    string titulo, autor, isbn, genero;
+    int anioPublicacion;
+    bool disponible;
+
+public:
+    Libro(string titulo = "", string autor = "", string isbn = "", string genero = "", int anioPublicacion = 0, bool disponible = true)
+        : titulo(titulo), autor(autor), isbn(isbn), genero(genero), anioPublicacion(anioPublicacion), disponible(disponible) {}
+
+    void setDatos() {
+        cout << "Título: ";
+        cin.ignore();
+        getline(cin, titulo);
+        cout << "Autor: ";
+        getline(cin, autor);
+        cout << "ISBN: ";
+        getline(cin, isbn);
+        cout << "Género: ";
+        getline(cin, genero);
+        cout << "Año de publicación: ";
+        cin >> anioPublicacion;
+        disponible = true;
+    }
+
+    void mostrarDatos() const {
+        cout << "Título: " << titulo << "\nAutor: " << autor << "\nISBN: " << isbn
+             << "\nGénero: " << genero << "\nAño de publicación: " << anioPublicacion
+             << "\nEstado: " << (disponible ? "Disponible" : "Prestado") << "\n";
+    }
+
+    bool coincideCriterio(const string& criterio) const {
+        return titulo.find(criterio) != string::npos || autor.find(criterio) != string::npos || genero.find(criterio) != string::npos;
+    }
+
+    bool estaDisponible() const { return disponible; }
+    void prestar() { disponible = false; }
+    void devolver() { disponible = true; }
+    string obtenerISBN() const { return isbn; }
+};
+
+// Clase Usuario
+class Usuario {
+private:
+    string nombre, id, contacto;
+
+public:
+    Usuario(string nombre = "", string id = "", string contacto = "")
+        : nombre(nombre), id(id), contacto(contacto) {}
+
+    void setDatos() {
+        cout << "Nombre: ";
+        cin.ignore();
+        getline(cin, nombre);
+        cout << "ID: ";
+        getline(cin, id);
+        cout << "Contacto: ";
+        getline(cin, contacto);
+    }
+
+    void mostrarDatos() const {
+        cout << "Nombre: " << nombre << "\nID: " << id << "\nContacto: " << contacto << "\n";
+    }
+
+    bool coincideCriterio(const string& criterio) const {
+        return nombre.find(criterio) != string::npos || id.find(criterio) != string::npos;
+    }
+
+    string obtenerID() const { return id; }
+};
+
+// Clase Préstamo
+class Prestamo {
+private:
+    string idUsuario, isbnLibro;
+    time_t fechaPrestamo, fechaLimite;
+    int diasRetraso;
+
+public:
+    Prestamo(string idUsuario = "", string isbnLibro = "", int diasPrestamo = 14)
+        : idUsuario(idUsuario), isbnLibro(isbnLibro), diasRetraso(0) {
+        fechaPrestamo = time(0);
+        fechaLimite = fechaPrestamo + diasPrestamo * 24 * 60 * 60;
+    }
+
+    void mostrarDatos() const {
+        cout << "ID Usuario: " << idUsuario
+             << "\nISBN Libro: " << isbnLibro
+             << "\nFecha Préstamo: " << ctime(&fechaPrestamo)
+             << "Fecha Límite: " << ctime(&fechaLimite);
+    }
+
+    string obtenerISBN() const { return isbnLibro; }
+    string obtenerIDUsuario() const { return idUsuario; }
+    bool calcularRetraso() {
+        time_t hoy = time(0);
+        diasRetraso = difftime(hoy, fechaLimite) / (24 * 60 * 60);
+        return diasRetraso > 0;
+    }
+
+    int obtenerDiasRetraso() const { return diasRetraso; }
+};
+
+// Clase Biblioteca
+class Biblioteca {
+private:
+    vector<Libro> libros;
+    vector<Usuario> usuarios;
+    vector<Prestamo> prestamos;
+
+public:
+    void agregarLibro() {
+        Libro libro;
+        libro.setDatos();
+        libros.push_back(libro);
+        cout << "\nLibro agregado correctamente.\n";
+    }
+
+    void eliminarLibro() {
+        string isbn;
+        cout << "Ingrese el ISBN del libro a eliminar: ";
+        cin >> isbn;
+
+        for (auto it = libros.begin(); it != libros.end(); ++it) {
+            if (it->obtenerISBN() == isbn) {
+                libros.erase(it);
+                cout << "\nLibro eliminado correctamente.\n";
+                return;
+            }
+        }
+        cout << "\nLibro no encontrado.\n";
+    }
+
+    void buscarLibro() {
+        string criterio;
+        cout << "Ingrese el criterio de búsqueda (Título, Autor, Género): ";
+        cin.ignore();
+        getline(cin, criterio);
+
+        for (const auto& libro : libros) {
+            if (libro.coincideCriterio(criterio)) {
+                libro.mostrarDatos();
+                cout << "-------------------\n";
+            }
+        }
+    }
+
+    void registrarUsuario() {
+        Usuario usuario;
+        usuario.setDatos();
+        usuarios.push_back(usuario);
+        cout << "\nUsuario registrado correctamente.\n";
+    }
+
+    void buscarUsuario() {
+        string criterio;
+        cout << "Ingrese el criterio de búsqueda (Nombre o ID): ";
+        cin.ignore();
+        getline(cin, criterio);
+
+        for (const auto& usuario : usuarios) {
+            if (usuario.coincideCriterio(criterio)) {
+                usuario.mostrarDatos();
+                cout << "-------------------\n";
+            }
+        }
+    }
+
+    void registrarPrestamo() {
+        string idUsuario, isbn;
+        cout << "Ingrese el ID del usuario: ";
+        cin >> idUsuario;
+        cout << "Ingrese el ISBN del libro: ";
+        cin >> isbn;
+
+        for (auto& libro : libros) {
+            if (libro.obtenerISBN() == isbn && libro.estaDisponible()) {
+                libro.prestar();
+                prestamos.push_back(Prestamo(idUsuario, isbn));
+                cout << "\nPréstamo registrado correctamente.\n";
+                return;
+            }
+        }
+        cout << "\nEl libro no está disponible o no existe.\n";
+    }
+
+    void devolverLibro() {
+        string isbn;
+        cout << "Ingrese el ISBN del libro a devolver: ";
+        cin >> isbn;
+
+        for (auto& prestamo : prestamos) {
+            if (prestamo.obtenerISBN() == isbn) {
+                for (auto& libro : libros) {
+                    if (libro.obtenerISBN() == isbn) {
+                        libro.devolver();
+                        if (prestamo.calcularRetraso()) {
+                            cout << "\nEl libro tiene un retraso de " << prestamo.obtenerDiasRetraso()
+                                 << " días. Se aplicará una sanción.\n";
+                        }
+                        prestamos.erase(remove(prestamos.begin(), prestamos.end(), prestamo), prestamos.end());
+                        cout << "\nLibro devuelto correctamente.\n";
+                        return;
+                    }
+                }
+            }
+        }
+        cout << "\nNo se encontró el préstamo del libro.\n";
+    }
+
+    void generarReporte() {
+        cout << "\n--- Reporte de Libros Prestados ---\n";
+        for (const auto& prestamo : prestamos) {
+            prestamo.mostrarDatos();
+            cout << "-------------------\n";
+        }
+    }
+};
+
+// Función principal
+int main() {
+    Biblioteca biblioteca;
+    int opcion;
+
+    do {
+        cout << "\n--- Menú de Biblioteca ---\n";
+        cout << "1. Agregar Libro\n2. Eliminar Libro\n3. Buscar Libro\n4. Registrar Usuario\n"
+             << "5. Buscar Usuario\n6. Registrar Préstamo\n7. Devolver Libro\n8. Generar Reporte\n9. Salir\n";
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1: biblioteca.agregarLibro(); break;
+        case 2: biblioteca.eliminarLibro(); break;
+        case 3: biblioteca.buscarLibro(); break;
+        case 4: biblioteca.registrarUsuario(); break;
+        case 5: biblioteca.buscarUsuario(); break;
+        case 6: biblioteca.registrarPrestamo(); break;
+        case 7: biblioteca.devolverLibro(); break;
+        case 8: biblioteca.generarReporte(); break;
+        case 9: cout << "Saliendo del sistema.\n"; break;
+        default: cout << "Opción inválida.\n";
+        }
+        pausa();
+    } while (opcion != 9);
+
+    return 0;
+}
 
